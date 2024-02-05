@@ -1,0 +1,101 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: #222;
+}
+main {
+  padding: 10px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+img {
+  max-width: 100%;
+}
+
+header {
+  display: flex;
+  margin-top: 20px;
+  justify-content: space-between;
+  margin-bottom: 50px;
+  align-items: center;
+}
+
+.link {
+  text-decoration: none;
+  color: inherit;
+}
+
+header .logo {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+header nav {
+  display: flex;
+  gap: 15px;
+}
+
+div.post {
+  display: grid;
+  grid-template-columns: 4fr 16fr;
+  gap: 40px;
+  margin-bottom: 25px;
+}
+
+div.post div.image {
+  height: 200%;
+  width: 110%;
+}
+
+div.post div.texts h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+div.post p.info {
+  margin: 6px 0;
+  color: #888;
+  font-size: 0.7rem;
+  font-weight: bold;
+  display: flex;
+  gap: 15px;
+}
+
+div.post p.info a.author {
+  color: #333;
+}
+
+div.post p.summary {
+  margin: 10px 0px;
+  line-height: 1.6rem;
+}
+
+from.login,
+form.register {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+input {
+  display: block;
+  margin-bottom: 5px;
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px 7px;
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+}
+
+button {
+  width: 100%;
+  display: block;
+  padding: 10px 0;
+}
+
+form.login h1, form.register h1 {
+  text-align: center;
+}
