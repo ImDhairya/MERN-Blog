@@ -31,8 +31,7 @@ app.post("/register", async (req, res) => {
     });
     res.json(userDoc);
   } catch (e) {
-    // console.log(e);
-    // res.status(400).json(e);
+ 
     if (e.code === 11000) {
       res.status(400).json({message: "User already exists"});
     } else {
@@ -150,15 +149,48 @@ app.get("/post", async (req, res) => {
   );
 });
 
-app.get("/post/:id", async (req, res) => {
-  const {id} = req.params;
-  const postDoc = await Post.findById(id).populate('author', ['username']);
-  res.json(postDoc)
 
 
+app.put("/post", uploadMiddleware.single('file'), async (req, res) => {
+  let newPath = null;
+  const {token} = req.cookies;
+  
+  if (req.file) {
+    const {originalname, path} = req.file;
+    const parts = originalname.split(".");
+    const ext = parts[parts.length - 1];
+    newPath = path + '.' + ext
+    fs.renameSync(path, newPath)
+  }
+
+ 
+   jwt.verify(token, secret, {} , async (err, info) => {
+     if (err) throw err;
+     const {id, title, summary, content} = req.body;
+     const postDoc = await Post.findById(id);
+     const isAuthor =
+       JSON.stringify(postDoc.author) === JSON.stringify(info.id);
+     if (!isAuthor) {
+       return res.status(400).json("you are not the author", info);
+     }
+     await postDoc.updateOne({
+       title,
+       summary,
+      
+       content,
+       cover: newPath ? newPath : postDoc.cover,
+     });
+
+     res.json(postDoc);
+   });
 
 });
 
+app.get("/post/:id", async (req, res) => {
+  const {id} = req.params;
+  const postDoc = await Post.findById(id).populate("author", ["username"]);
+  res.json(postDoc);
+});
 app.listen(4000, () => {
   console.log("connected to 4000");
 });
