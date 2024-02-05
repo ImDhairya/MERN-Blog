@@ -1,31 +1,70 @@
-import React from 'react'
-import { Link } from "react-router-dom";
+// import React from "react";
+// import {Link} from "react-router-dom";
 
-function Post() {
+// function Post({_id, title, summary, cover, content, createdAt, author}) {
+//   console.log(title);
+//   return (
+//     <div className="post">
+//       <div className="image">
+//         <Link to={`/post/${_id}`}>
+//           <img
+//             src={"http://localhost:4000/" + cover}
+//             alt=""
+//           />
+//         </Link>
+//       </div>
+//       <div className="texts">
+//         <Link to={`/post/${_id}`}></Link>
+//         <h2>{title}</h2>
+//         <p className="info">
+//           <Link className="author link">{author.username}</Link>
+//           <time>{formatISO9075(new Date(createdAt))}</time>
+//         </p>
+
+//         <p className="summary">{summary}</p>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default Post;
+
+// C:\Users\pandy\OneDrive\Desktop\Full-Stack-BLOG\api\uploads\4c5f3225b2c0b378583855052d9ae576.png
+
+import React from "react";
+import {Link} from "react-router-dom";
+import {compareAsc, format, formatISO9075} from "date-fns";
+
+function Post({_id, title, summary, cover, content, createdAt, author}) {
   return (
     <div className="post">
       <div className="image">
-        <img
-          src="https://a10.gaanacdn.com/gn_img/albums/Dk9KN2KBx1/k9KN8dRBWB/size_l.webp"
-          alt=""
-        />
+        <Link
+          className="link"
+          to={`/post/${_id}`}
+        >
+          <img
+            src={"http://localhost:4000/" + cover}
+            alt=""
+          ></img>
+        </Link>
       </div>
       <div className="texts">
-        <h2>Full hoouse battry backup coming later this year</h2>
+        <Link
+          className="link"
+          to={`/post/${_id}`}
+        >
+          <h2>{title}</h2>
+        </Link>
         <p className="info">
-          <Link className="author link"> Dawid Paszko</Link>
-          <time>2024-01-15 11:44</time>
+          <Link className="author link"> {author.username}</Link>
+          <time>{formatISO9075(new Date(createdAt))}</time>
         </p>
 
-        <p className="summary">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem.
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eius! Lorem
-          ipsum dolor sit amet consectetur adipisicing elit. Quidem. Lorem,
-          ipsum dolor sit amet consectetur adipisicing elit.
-        </p>
+        <p className="summary">{summary}</p>
       </div>
     </div>
   );
 }
 
-export default Post
+export default Post;

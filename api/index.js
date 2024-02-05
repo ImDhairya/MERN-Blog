@@ -10,6 +10,7 @@ const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const uploadMiddleware = multer({dest: "uploads/"});
 const fs = require("fs");
+const {info} = require("console");
 const salt = bcrypt.genSaltSync(10);
 const secret = "asdfe45we45w345wegw345werjktjwertkj";
 require("dotenv").config();
@@ -17,14 +18,9 @@ app.use(cors({credentials: true, origin: "http://localhost:5173"}));
 
 app.use(express.json());
 app.use(cookieParser());
-// app.use("/uploads", express.static(__dirname + "/uploads"));
-
+app.use("/uploads", express.static(__dirname + "/uploads"));
 const url = process.env.URL;
 mongoose.connect(url);
-
-// mongoose.connect(
-//   "mongodb+srv://dhairya:74p5WpUWUftjWNSu@cluster0.tbq8so1.mongodb.net/?retryWrites=true&w=majority"
-// );
 
 app.post("/register", async (req, res) => {
   const {username, password} = req.body;
@@ -117,15 +113,24 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
     const newPath = path + "." + ext;
     fs.renameSync(path, newPath);
     // res.json({ext});
-    // res.json({files: req.file});
+    // res.json({files: req.file});su
 
     const {title, summary, content} = req.body;
+    const {token} = req.cookies;
+    // can add asyncawait/ trycatch
+    let a = undefined;
+
+    jwt.verify(token, secret, {}, async (error, info) => {
+      if (error) throw error;
+      a = info;
+    });
 
     const postDoc = await Post.create({
       title,
       summary,
       content,
       cover: newPath,
+      author: a.id,
     });
 
     res.json({postDoc});
@@ -134,6 +139,24 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
       .status(500)
       .json({message: "An error occured while processing the file"});
   }
+});
+
+app.get("/post", async (req, res) => {
+  res.json(
+    await Post.find()
+      .populate("author", ["username"])
+      .sort({createdAt: -1})
+      .limit(20)
+  );
+});
+
+app.get("/post/:id", async (req, res) => {
+  const {id} = req.params;
+  const postDoc = await Post.findById(id).populate('author', ['username']);
+  res.json(postDoc)
+
+
+
 });
 
 app.listen(4000, () => {
